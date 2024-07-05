@@ -1,7 +1,8 @@
 import { HTTP_METHOD } from "@/common/enums";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 // import JwtStorageService from "@/infrastructure/services/auth/jwt-storage.service";
 import { BasePaginationDto } from ".";
+
 export class BaseService {
   constructor() {}
 
@@ -11,7 +12,11 @@ export class BaseService {
    * @param params
    * @returns T
    */
-  protected get<T>(baseUrl: string, path: string, params?: any) {
+  protected get<T>(
+    baseUrl: string,
+    path: string,
+    params?: any
+  ): Promise<AxiosResponse<T>> {
     return this._api<T>(baseUrl, HTTP_METHOD.GET, path, params);
   }
 
@@ -21,7 +26,11 @@ export class BaseService {
    * @param body
    * @returns T | null
    */
-  protected post<T>(baseUrl: string, path: string, body?: any) {
+  protected post<T>(
+    baseUrl: string,
+    path: string,
+    body?: any
+  ): Promise<AxiosResponse<T>> {
     return this._api<T>(baseUrl, HTTP_METHOD.POST, path, body);
   }
 
@@ -31,7 +40,11 @@ export class BaseService {
    * @param body
    * @returns T | null
    */
-  protected patch<T>(baseUrl: string, path: string, body?: any) {
+  protected patch<T>(
+    baseUrl: string,
+    path: string,
+    body?: any
+  ): Promise<AxiosResponse<T>> {
     return this._api<T>(baseUrl, HTTP_METHOD.PATCH, path, body);
   }
 
@@ -42,7 +55,11 @@ export class BaseService {
    * @param body
    * @returns T | null
    */
-  protected put<T>(baseUrl: string, path: string, body?: any) {
+  protected put<T>(
+    baseUrl: string,
+    path: string,
+    body?: any
+  ): Promise<AxiosResponse<T>> {
     return this._api<T>(baseUrl, HTTP_METHOD.PUT, path, body);
   }
 
@@ -52,7 +69,11 @@ export class BaseService {
    * @param params
    * @returns T | null
    */
-  protected delete<T>(baseUrl: string, path: string, params?: any) {
+  protected delete<T>(
+    baseUrl: string,
+    path: string,
+    params?: any
+  ): Promise<AxiosResponse<T>> {
     return this._api<T>(baseUrl, HTTP_METHOD.DELETE, path, params);
   }
 
@@ -68,7 +89,7 @@ export class BaseService {
     path: string,
     params: any,
     pagination: BasePaginationDto
-  ) {
+  ): Promise<AxiosResponse<T>> {
     let request = {};
 
     if (params instanceof BasePaginationDto) {
@@ -102,7 +123,7 @@ export class BaseService {
     path: string,
     params?: any,
     body?: any
-  ) {
+  ): Promise<AxiosResponse<T>> {
     if (path.indexOf("http") !== 0) {
       path = baseUrl + path;
     }
