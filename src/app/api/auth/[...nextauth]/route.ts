@@ -17,7 +17,7 @@ const handler = NextAuth({
       },
       async authorize(credentials, req) {
         try {
-          const res = await axios.post("http://localhost:3001/login", {
+          const res = await axios.post("http://localhost:8000/login", {
             username: credentials.username,
             password: credentials.password,
           });
@@ -35,9 +35,14 @@ const handler = NextAuth({
   ],
 
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account, profile, user }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
       console.log("token", token);
+
+      if (user) {
+        console.log("jwt user111", user);
+        console.log("jwt token", token);
+      }
       // if (account) {
       //   token.accessToken = account.access_token;
       //   token.email = profile.email;
@@ -45,6 +50,8 @@ const handler = NextAuth({
       return token;
     },
     async session({ session, token }) {
+      console.log("session", session);
+      console.log("token", token);
       return { ...session, ...token };
     },
   },
@@ -53,8 +60,9 @@ const handler = NextAuth({
   },
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60 * 24 * 365,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
-  secret: process.env.NEXTAUTH_SECRET || "TEST",
+  secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
 });
 export { handler as GET, handler as POST };

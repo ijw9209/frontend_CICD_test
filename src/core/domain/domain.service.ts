@@ -2,7 +2,6 @@ import { HTTP_METHOD } from "@/common/enums";
 import axios, { AxiosResponse } from "axios";
 // import JwtStorageService from "@/infrastructure/services/auth/jwt-storage.service";
 import { DomainPaginationDto } from "./domain-pagination.dto";
-
 export class DomainService {
   constructor() {}
 
@@ -17,6 +16,7 @@ export class DomainService {
     path: string,
     params?: any
   ): Promise<AxiosResponse<T>> {
+    console.log("여ㅛ기111", baseUrl, HTTP_METHOD.GET, path, params);
     return this._api<T>(baseUrl, HTTP_METHOD.GET, path, params);
   }
 
@@ -114,6 +114,7 @@ export class DomainService {
   ) {
     if (!indicator) return apiUrl;
     apiUrl = apiUrl.replace(indicator, paramater);
+    console.log("apiUrl", apiUrl);
     return apiUrl;
   }
 
@@ -136,13 +137,18 @@ export class DomainService {
     // const accessToken = JwtStorageService.getToken();
     //로그인 만들고 토큰 삽입
     const accessToken = "";
+
+    // const sesssion = await getSession();
+
     if (accessToken) {
-      headers.Authorization = `${accessToken}`;
+      console.log("accessToken", accessToken);
+      headers.Authorization = `eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..hw8HZpdkjYhlkj5g.EkTQpdG_qnDZCnsZpC7DvPvnKrRPj_BZv4dM_8EAMjIkeObc09Cua5ho2O9yN0Gi6d3073c1eCMKllNTWJ90UnOoxjgHPQlKzw-7qC38V88.77zo6B_k4AeaZNbRL4bjpA`;
     }
 
     // exclude empty strings
     if (params) params = this.__excludeNullParam(params);
 
+    console.log(httpMethod, path, params, headers);
     if (httpMethod === HTTP_METHOD.GET) {
       const paramsSerializer = {
         indexes: null, // 콜론 표시 제거
