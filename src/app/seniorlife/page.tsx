@@ -19,8 +19,6 @@ export default function SeniorLife() {
   }, []);
 
   const getSeniorlifePost = async () => {
-    // postList = await
-
     seniorlifeSearchRequestDto.startDate = "20240623";
     seniorlifeSearchRequestDto.endDate = "20240723";
     seniorlifeSearchRequestDto.categoryId = "8";
@@ -31,7 +29,6 @@ export default function SeniorLife() {
 
     await seniorlifeSearchRequestDto.validateDto();
 
-    // parameterSwitcher('/test', seniorlifeSearchRequestDto);
     if (seniorlifeSearchRequestDto.isValid) {
       try {
         const res = await SeniorlifeService.findSeniorLife(

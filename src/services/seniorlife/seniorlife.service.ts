@@ -2,11 +2,7 @@ import { BaseService } from "@/core";
 
 import { AxiosResponse } from "axios";
 import { API_VERSION, BaseResponse } from "@/common";
-import {
-  SeniorlifePostListModel,
-  SeniorlifePostModel,
-  SeniorlifePostDetailModel,
-} from "@/models";
+import { SeniorlifePostListModel, SeniorlifePostDetailModel } from "@/models";
 import { GET_SERVICE } from "@/services/shared/service.endpoint";
 import { SeniorlifeSearchReqeustDto, SeniorlifeRequestDetailDto } from "@/dto";
 
