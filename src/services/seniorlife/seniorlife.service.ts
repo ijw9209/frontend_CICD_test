@@ -7,7 +7,7 @@ import {
   SeniorlifePostModel,
   SeniorlifePostDetailModel,
 } from "@/app/models";
-import { GET_SERVICE } from "@/service/shared/service.endpoint";
+import { GET_SERVICE } from "@/services/shared/service.endpoint";
 import { SeniorlifeSearchReqeustDto, SeniorlifeRequestDetailDto } from "@/dto";
 
 class SeniorlifeService extends BaseService {

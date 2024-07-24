@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { SeniorlifeSearchReqeustDto } from "@/dto";
 import { PAGE_URL_ENUM, YN_ENUM } from "@/common";
-import SeniorlifeService from "@/service/seniorlife/seniorlife.service";
+import SeniorlifeService from "@/services/seniorlife/seniorlife.service";
 import { SeniorlifePostModel } from "../models";
 import Link from "next/link";
 
