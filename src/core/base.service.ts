@@ -1,4 +1,4 @@
-import { API_VERSION, HTTP_METHOD } from "@/common/enums";
+import { API_STATUS_CODE_ENUM, API_VERSION, HTTP_METHOD } from "@/common/enums";
 import axios, { AxiosResponse } from "axios";
 // import JwtStorageService from "@/infrastructure/services/auth/jwt-storage.service";
 import { getSession } from "next-auth/react";
@@ -10,7 +10,7 @@ export class BaseService extends DomainService {
   }
 
   protected versionSwitcher(version: API_VERSION) {
-    return `http://localhost:8000/${version}`;
+    return `${process.env.NEXT_PUBLIC_API_BASE_URL}/${version}api/admin`;
   }
 
   override _api<T>(
@@ -26,14 +26,16 @@ export class BaseService extends DomainService {
 
         const session = await getSession();
         console.log("session", session);
-        if (authorization) {
+        if (session && session.accessToken) {
           // authorization = authorization.replace("LD1 ", "");
-          config.headers.Authorization = authorization;
+          config.headers.Authorization = `Bearer ${session.accessToken}`;
         }
 
         return config;
       },
-      async (error) => {}
+      async (error) => {
+        return Promise.reject(error);
+      }
     );
     axios.interceptors.response.use(
       (response) => {
@@ -42,13 +44,19 @@ export class BaseService extends DomainService {
       async (error) => {
         const { response } = error;
 
-        if (response?.status === 400) {
+        console.log("response", response);
+
+        if (response?.status === API_STATUS_CODE_ENUM.STATUS_400) {
           ///...
-        } else if (response?.status === 401) {
+        } else if (response?.status === API_STATUS_CODE_ENUM.STATUS_401) {
           //....
-        } else if (response?.status === 500) {
+        } else if (response?.status === API_STATUS_CODE_ENUM.STATUS_500) {
         }
 
+        //에러 처리 요구사항에 따라 다를 듯
+        //서비스에서 에러 처리
+        // return Promise.reject(error);
+        //인터셉터에서 에러 처리
         return;
       }
     );

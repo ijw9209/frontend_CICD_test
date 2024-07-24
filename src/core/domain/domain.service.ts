@@ -2,6 +2,8 @@ import { HTTP_METHOD } from "@/common/enums";
 import axios, { AxiosResponse } from "axios";
 // import JwtStorageService from "@/infrastructure/services/auth/jwt-storage.service";
 import { DomainPaginationDto } from "./domain-pagination.dto";
+import { getSession } from "next-auth/react";
+
 export class DomainService {
   constructor() {}
 
@@ -16,7 +18,6 @@ export class DomainService {
     path: string,
     params?: any
   ): Promise<AxiosResponse<T>> {
-    console.log("여ㅛ기111", baseUrl, HTTP_METHOD.GET, path, params);
     return this._api<T>(baseUrl, HTTP_METHOD.GET, path, params);
   }
 
@@ -114,11 +115,10 @@ export class DomainService {
   ) {
     if (!indicator) return apiUrl;
     apiUrl = apiUrl.replace(indicator, paramater);
-    console.log("apiUrl", apiUrl);
     return apiUrl;
   }
 
-  protected _api<T>(
+  protected async _api<T>(
     baseUrl: string,
     httpMethod: HTTP_METHOD,
     path: string,
@@ -129,26 +129,30 @@ export class DomainService {
       path = baseUrl + path;
     }
 
+    const session = await getSession();
+    const accessToken = session?.accessToken;
     // header values
     const headers: any = {
       "Content-type": "application/json",
+      sid: accessToken || "",
     };
+    // const token = await getToken({ req: undefined, secret });
 
     // const accessToken = JwtStorageService.getToken();
     //로그인 만들고 토큰 삽입
-    const accessToken = "";
+    // const accessToken = "";
 
-    // const sesssion = await getSession();
-
+    // console.log("session", session);
+    // console.log("accessToken", accessToken);
     if (accessToken) {
       console.log("accessToken", accessToken);
-      headers.Authorization = `eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIn0..hw8HZpdkjYhlkj5g.EkTQpdG_qnDZCnsZpC7DvPvnKrRPj_BZv4dM_8EAMjIkeObc09Cua5ho2O9yN0Gi6d3073c1eCMKllNTWJ90UnOoxjgHPQlKzw-7qC38V88.77zo6B_k4AeaZNbRL4bjpA`;
+      headers.Authorization = `Bearer ${accessToken}`;
+      // headers.sid = accessToken;
     }
 
     // exclude empty strings
     if (params) params = this.__excludeNullParam(params);
 
-    console.log(httpMethod, path, params, headers);
     if (httpMethod === HTTP_METHOD.GET) {
       const paramsSerializer = {
         indexes: null, // 콜론 표시 제거
@@ -183,6 +187,7 @@ export class DomainService {
     if (typeof value !== "object") {
       return value;
     }
+    //빈 스트링 막기
     Object.keys(value).map((prop) => {
       if (value[prop] === "") {
         delete value[prop];

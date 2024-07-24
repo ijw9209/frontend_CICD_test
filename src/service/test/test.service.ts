@@ -13,7 +13,6 @@ class TestService extends BaseService {
   public async findProtected(): Promise<
     AxiosResponse<BaseResponse<ProteectedModel>>
   > {
-    console.log("호출");
     return this.get<BaseResponse<ProteectedModel>>(
       this.versionSwitcher(API_VERSION.NONE),
       this.parameterSwitcher(GET_SERVICE.test.protected),

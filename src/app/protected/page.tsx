@@ -8,22 +8,9 @@ export default function Protected() {
   }, []);
 
   const getFindProtected = async () => {
-    console.log("여기 호출");
     const res = await TestService.findProtected();
 
-    console.log("[res]", res);
-  };
-
-  const parameterSwitcher = (
-    apiUrl: string,
-    indicator?: string,
-    paramater?: any
-  ) => {
-    console.log("paramater", paramater);
-    if (!indicator) return apiUrl;
-    apiUrl = apiUrl.replace(indicator, paramater);
-    console.log("apiUrl", apiUrl);
-    return apiUrl;
+    // console.log("[res]", res);
   };
 
   return <div>Protected Page</div>;

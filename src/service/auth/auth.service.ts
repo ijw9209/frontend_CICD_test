@@ -1,4 +1,6 @@
-class AuthService {
+import { BaseService } from "@/core";
+
+class AuthService extends BaseService {
   JWT_TOKEN_NAME = "righthands_jwt_token";
 
   //일단 세션 스토리지
@@ -14,3 +16,5 @@ class AuthService {
     sessionStorage.removeItem(this.JWT_TOKEN_NAME);
   }
 }
+
+export default new AuthService();

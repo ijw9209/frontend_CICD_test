@@ -4,4 +4,5 @@ export class BaseResponse<T> {
   }
   status: string;
   data: T;
+  error: T;
 }
