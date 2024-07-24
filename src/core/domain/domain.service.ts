@@ -1,7 +1,7 @@
 import { HTTP_METHOD } from "@/common/enums";
 import axios, { AxiosResponse } from "axios";
 // import JwtStorageService from "@/infrastructure/services/auth/jwt-storage.service";
-import { DomainPaginationDto } from "./domain-pagination.dto";
+import { DomainPaginationDto } from "@/core/domain/domain-pagination.dto";
 import { getSession } from "next-auth/react";
 
 export class DomainService {

@@ -74,7 +74,7 @@ const handler = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
     updateAge: 24 * 60 * 60, // 24 hours
   },
-  // secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
-  secret: "knpixAxQvOHbh8vxdWD5b4ldP/4bJqFSbL9lqEOT2uQ=",
+  secret: process.env.NEXTAUTH_SECRET,
+  // secret: "knpixAxQvOHbh8vxdWD5b4ldP/4bJqFSbL9lqEOT2uQ=",
 });
 export { handler as GET, handler as POST };

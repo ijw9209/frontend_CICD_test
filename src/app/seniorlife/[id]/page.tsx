@@ -2,9 +2,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { SeniorlifeRequestDetailDto } from "@/dto";
-import serniorlifeService from "@/service/seniorlife/seniorlife.service";
+import serniorlifeService from "@/services/seniorlife/seniorlife.service";
 import { API_STATUS_CODE_ENUM } from "@/common";
-import { SeniorlifePostDetailModel } from "@/app/models";
+import { SeniorlifePostDetailModel } from "@/models";
 
 export default function SeniorLifeDetail() {
   const { id } = useParams();

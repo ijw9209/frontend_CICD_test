@@ -1,4 +1,4 @@
-import { ProteectedModel } from "@/app/models";
+import { ProteectedModel } from "@/models";
 import { API_VERSION, BaseResponse } from "@/common";
 import { BaseService } from "@/core";
 import { AxiosResponse } from "axios";
