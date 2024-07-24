@@ -2,6 +2,7 @@ import { HTTP_METHOD } from "@/common/enums";
 import axios, { AxiosResponse } from "axios";
 // import JwtStorageService from "@/infrastructure/services/auth/jwt-storage.service";
 import { DomainPaginationDto } from "./domain-pagination.dto";
+import { getSession } from "next-auth/react";
 
 export class DomainService {
   constructor() {}
@@ -117,7 +118,7 @@ export class DomainService {
     return apiUrl;
   }
 
-  protected _api<T>(
+  protected async _api<T>(
     baseUrl: string,
     httpMethod: HTTP_METHOD,
     path: string,
@@ -128,16 +129,25 @@ export class DomainService {
       path = baseUrl + path;
     }
 
+    const session = await getSession();
+    const accessToken = session?.accessToken;
     // header values
     const headers: any = {
       "Content-type": "application/json",
+      sid: accessToken || "",
     };
+    // const token = await getToken({ req: undefined, secret });
 
     // const accessToken = JwtStorageService.getToken();
     //로그인 만들고 토큰 삽입
-    const accessToken = "";
+    // const accessToken = "";
+
+    // console.log("session", session);
+    // console.log("accessToken", accessToken);
     if (accessToken) {
-      headers.Authorization = `${accessToken}`;
+      console.log("accessToken", accessToken);
+      headers.Authorization = `Bearer ${accessToken}`;
+      // headers.sid = accessToken;
     }
 
     // exclude empty strings
@@ -177,6 +187,7 @@ export class DomainService {
     if (typeof value !== "object") {
       return value;
     }
+    //빈 스트링 막기
     Object.keys(value).map((prop) => {
       if (value[prop] === "") {
         delete value[prop];

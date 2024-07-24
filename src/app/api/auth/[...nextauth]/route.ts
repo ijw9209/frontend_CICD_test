@@ -17,17 +17,28 @@ const handler = NextAuth({
       },
       async authorize(credentials, req) {
         try {
-          const res = await axios.post("http://localhost:3001/login", {
-            username: credentials.username,
-            password: credentials.password,
-          });
+          const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/admin/login`,
+            // 'http://localhost:8000/login',
+            {
+              id: credentials.username,
+              password: credentials.password,
+            }
+          );
 
-          console.log("[res]", res);
-
-          if (res.data) {
-            return res.data;
+          if (res.data.data && res.data.data.admin) {
+            // return { ...res.data, accessToken: res.data.token }; // accessToken을 포함하여 반환
+            //백엔드 세팅 값에 따라 토큰 있는곳을 변경해줘야함, 지금 어드민과 연결되어있어서 어드민 토큰
+            return {
+              ...res.data.data.admin,
+              accessToken: res.data.data.admin.loginToken,
+            }; // accessToken을 포함하여 반환
+          } else {
+            console.log("Login failed:", res.data.error);
+            return null;
           }
         } catch (error) {
+          console.log("Error during authentication ", error);
           return null;
         }
       },
@@ -35,17 +46,24 @@ const handler = NextAuth({
   ],
 
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account, profile, user }) {
       // Persist the OAuth access_token and or the user id to the token right after signin
-      console.log("token", token);
-      // if (account) {
-      //   token.accessToken = account.access_token;
-      //   token.email = profile.email;
-      // }
+      if (user?.accessToken) {
+        token.accessToken = user.accessToken;
+      }
       return token;
     },
     async session({ session, token }) {
-      return { ...session, ...token };
+      if (token?.accessToken) {
+        session.accessToken = token.accessToken as string;
+      }
+      return session;
+    },
+    async redirect({ url, baseUrl }) {
+      // 로그아웃 후 기본 리다이렉션 URL을 설정합니다.
+      // baseUrl은 NEXTAUTH_URL 환경 변수를 사용합니다.
+
+      return url.startsWith(baseUrl) ? url : baseUrl;
     },
   },
   pages: {
@@ -53,8 +71,10 @@ const handler = NextAuth({
   },
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60 * 24 * 365,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    updateAge: 24 * 60 * 60, // 24 hours
   },
-  secret: process.env.NEXTAUTH_SECRET || "TEST",
+  // secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET,
+  secret: "knpixAxQvOHbh8vxdWD5b4ldP/4bJqFSbL9lqEOT2uQ=",
 });
 export { handler as GET, handler as POST };
