@@ -1,12 +1,24 @@
 "use client";
 import { useSession, signIn, signOut } from "next-auth/react";
-
-import { PAGE_URL_ENUM } from "@/common";
-
+import { PAGE_URL_ENUM, ALERT_TYPE_ENUM } from "@/common";
 import Link from "next/link";
 import { Fragment, useEffect } from "react";
+import { useCommonAlertModalStore } from "@/store/common-alert-modal.store";
+
 export default function Home() {
   const { data: session } = useSession();
+
+  const { setAlertProps } = useCommonAlertModalStore((state) => ({
+    setAlertProps: state.setAlertProps,
+  }));
+
+  const showAlert = () => {
+    setAlertProps({
+      display: true,
+      message: "This is an alert message!",
+      alertType: ALERT_TYPE_ENUM.ALERT,
+    });
+  };
 
   return (
     <div>
@@ -22,6 +34,9 @@ export default function Home() {
       ) : (
         <Link href={PAGE_URL_ENUM.LOGIN}>Login</Link>
       )}
+      <div>
+        <button onClick={showAlert}>Show Alert</button>
+      </div>
     </div>
   );
 }

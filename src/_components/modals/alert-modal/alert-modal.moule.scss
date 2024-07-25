@@ -1,0 +1,61 @@
+/* alert-modal.module.scss */
+.modal_wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 화면 전체 높이 */
+  width: 100vw; /* 화면 전체 너비 */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999; /* 모달을 최상위에 배치 */
+
+  .modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6); /* 어두운 배경색 */
+    z-index: 1000;
+
+    .content {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* 더 진한 그림자 */
+      text-align: center;
+      max-width: 500px; /* 최대 너비 설정 */
+      width: 100%;
+      box-sizing: border-box;
+
+      p {
+        margin-bottom: 20px;
+        font-size: 16px;
+        color: #333; /* 텍스트 색상 */
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: #0056b3; /* 호버 시 더 진한 색상 */
+        }
+      }
+
+      .confirm_btn {
+        margin-right: 10px;
+      }
+    }
+  }
+}
