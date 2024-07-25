@@ -1,8 +1,16 @@
-import { API_STATUS_CODE_ENUM, API_VERSION, HTTP_METHOD } from "@/common/enums";
+import {
+  API_STATUS_CODE_ENUM,
+  API_VERSION,
+  HTTP_METHOD,
+  ALERT_TYPE_ENUM,
+} from "@/common/enums";
 import axios, { AxiosResponse } from "axios";
 // import JwtStorageService from "@/infrastructure/services/auth/jwt-storage.service";
 import { getSession } from "next-auth/react";
 import { DomainService } from "./domain";
+import { useCommonAlertModalStore } from "@/store/common-alert-modal.store";
+import { useRouter } from "next/navigation";
+import { AlertProps } from "@/types";
 
 export class BaseService extends DomainService {
   constructor() {
@@ -45,10 +53,20 @@ export class BaseService extends DomainService {
         const { response } = error;
 
         console.log("response", response);
+        const { setAlertProps } = useCommonAlertModalStore.getState();
+        const alertProps = new AlertProps();
 
         if (response?.status === API_STATUS_CODE_ENUM.STATUS_400) {
+          setAlertProps(alertProps);
           ///...
         } else if (response?.status === API_STATUS_CODE_ENUM.STATUS_401) {
+          alertProps.display = true;
+          alertProps.message = "로그인이 필요합니다.";
+          alertProps.alertType = ALERT_TYPE_ENUM.ALERT;
+          alertProps.confirmButtonName = "확인";
+          alertProps.callBackUrl = "/";
+
+          setAlertProps(alertProps);
           //....
         } else if (response?.status === API_STATUS_CODE_ENUM.STATUS_500) {
         }
