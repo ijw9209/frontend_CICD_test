@@ -1,0 +1,51 @@
+name: NEXT BOILERPLATE DEVELOPMENT DEPLOY
+
+# Controls when the workflow will run
+on:
+  push:
+    branches: [dev]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build_next_boilerplate_template_dev:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20.14.0
+          cache: npm
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.NEXT_PUBLIC_AWS_SSM_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.NEXT_PUBLIC_AWS_SSM_SECRET_KEY }}
+          aws-region: ${{ secrets.NEXT_PUBLIC_AWS_SSM_REGION }}
+      - name: Building next_boilerplate_template
+        env:
+          AWS_ENV: development
+          CI: false
+          NEXT_PUBLIC_AWS_SSM_ACCESS_KEY: ${{ secrets.NEXT_PUBLIC_AWS_SSM_ACCESS_KEY }}
+          NEXT_PUBLIC_AWS_SSM_SECRET_KEY: ${{ secrets.NEXT_PUBLIC_AWS_SSM_SECRET_KEY }}
+          NEXT_PUBLIC_AWS_SSM_REGION: ${{ secrets.NEXT_PUBLIC_AWS_SSM_REGION }}
+        run: |
+          CI=false
+          npm ci
+          npm run build:deploy
+      - name: Deploying to S3 BUCKET
+        run: aws s3 sync ./dist/ s3://${{ secrets.S3_REPO_DEV }} --delete
+      - name: Invalidate cache for CloudFront
+        run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DEV }} --paths "/*"
+      - name: Sending slack message...
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          author_name: NEXT_BOILERPLATE GITHUB ACTION
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        #env:
+        #  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }} # required
+        if: always() # Pick up events even if the job fails or is canceled.
