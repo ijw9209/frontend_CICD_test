@@ -4,21 +4,23 @@ import { PAGE_URL_ENUM, ALERT_TYPE_ENUM } from "@/common";
 import Link from "next/link";
 import { Fragment, useEffect } from "react";
 import { useCommonAlertModalStore } from "@/store/common-alert-modal.store";
+import { LodashUtil } from "@/common";
 
 export default function Home() {
   const { data: session } = useSession();
+  const lodashUtil = new LodashUtil();
 
   const { setAlertProps } = useCommonAlertModalStore((state) => ({
     setAlertProps: state.setAlertProps,
   }));
 
-  const showAlert = () => {
+  const showAlert = lodashUtil.debounceUtil(() => {
     setAlertProps({
       display: true,
       message: "This is an alert message!",
       alertType: ALERT_TYPE_ENUM.ALERT,
     });
-  };
+  }, 500);
 
   return (
     <div>
