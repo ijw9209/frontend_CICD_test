@@ -3,7 +3,13 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  distDir: "dist",
+  trailingSlash: true,
+  // output: "export",
+  // images: {
+  //   loader: "akamai",
+  //   path: "/",
+  // },
+  swcMinify: true,
   /* config options here */
   // dir: './src',     // 루트 디렉토리 설정
   // outDir: './build' // 빌드 디렉토리 설정
