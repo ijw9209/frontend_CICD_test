@@ -3,7 +3,7 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  trailingSlash: true,
+  // trailingSlash: true,
   swcMinify: true,
   reactStrictMode: true,
   env: {
