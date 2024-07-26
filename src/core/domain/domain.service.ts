@@ -133,7 +133,8 @@ export class DomainService {
     const accessToken = session?.accessToken;
     // header values
     const headers: any = {
-      "Content-type": "application/json",
+      "Content-type":
+        params instanceof FormData ? "multipart/form-data" : "application/json",
       sid: accessToken || "",
     };
     // const token = await getToken({ req: undefined, secret });
