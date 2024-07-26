@@ -3,6 +3,7 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
+  distDir: "dist",
   /* config options here */
   // dir: './src',     // 루트 디렉토리 설정
   // outDir: './build' // 빌드 디렉토리 설정
