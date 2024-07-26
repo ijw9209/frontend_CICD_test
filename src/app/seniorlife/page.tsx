@@ -19,6 +19,7 @@ export default function SeniorLife() {
   }, []);
 
   const getSeniorlifePost = async () => {
+    //주석 추가
     seniorlifeSearchRequestDto.startDate = "20240623";
     seniorlifeSearchRequestDto.endDate = "20240723";
     seniorlifeSearchRequestDto.categoryId = "8";
