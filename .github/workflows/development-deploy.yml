@@ -40,12 +40,12 @@ jobs:
         run: aws s3 sync ./dist/ s3://${{ secrets.S3_REPO_DEV }} --delete
       - name: Invalidate cache for CloudFront
         run: aws cloudfront create-invalidation --distribution-id ${{ secrets.CLOUDFRONT_DEV }} --paths "/*"
-      - name: Sending slack message...
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          author_name: NEXT_BOILERPLATE GITHUB ACTION
-          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+        # - name: Sending slack message...
+        #   uses: 8398a7/action-slack@v3
+        #   with:
+        #     status: ${{ job.status }}
+        #     author_name: NEXT_BOILERPLATE GITHUB ACTION
+        #     fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
         #env:
         #  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL_DEV }} # required
         if: always() # Pick up events even if the job fails or is canceled.
