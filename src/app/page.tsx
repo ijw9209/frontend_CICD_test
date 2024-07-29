@@ -2,9 +2,10 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { PAGE_URL_ENUM, ALERT_TYPE_ENUM } from "@/common";
 import Link from "next/link";
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { useCommonAlertModalStore } from "@/store/common-alert-modal.store";
 import { LodashUtil } from "@/common";
+import { AlertProps } from "@/types";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -15,11 +16,11 @@ export default function Home() {
   }));
 
   const showAlert = lodashUtil.debounceUtil(() => {
-    setAlertProps({
-      display: true,
-      message: "This is an alert message!",
-      alertType: ALERT_TYPE_ENUM.ALERT,
-    });
+    const alertProps = new AlertProps();
+    alertProps.display = true;
+    alertProps.message = "This is an alert message!";
+    alertProps.alertType = ALERT_TYPE_ENUM.ALERT;
+    setAlertProps(alertProps);
   }, 500);
 
   return (
