@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ssm": "^3.616.0",
+    "@sentry/nextjs": "^8.24.0",
     "aws-param-store": "^3.2.0",
     "axios": "^1.7.2",
     "class-transformer": "^0.5.1",
