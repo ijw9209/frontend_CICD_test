@@ -38,8 +38,6 @@ export default function SeniorLife() {
         console.log("[res data]", res);
 
         if (res && res?.status === 200) {
-          //   console.log(res.data.data?.seniorLife);
-          setSeniorLifePost(res.data.data?.seniorLife);
         }
       } catch (error) {
         console.log("Error in findSeniorLife:", error);
@@ -50,30 +48,30 @@ export default function SeniorLife() {
   return (
     <div>
       <h1>SeniorLife List 게시판 테스트</h1>
-      {seniorLifePost?.length > 0 && (
-        <Fragment>
-          <table border={1}>
-            <thead>
-              <tr>
-                <th>번호</th>
-                <th>제목</th>
+      {/* {seniorLifePost.length > 0 && ( */}
+      <Fragment>
+        <table border={1}>
+          <thead>
+            <tr>
+              <th>번호</th>
+              <th>제목</th>
+            </tr>
+          </thead>
+          <tbody>
+            {seniorLifePost.map((item) => (
+              <tr key={item.id}>
+                <td>{item.id}</td>
+                <td>
+                  <Link href={`${PAGE_URL_ENUM.SENIORLIFE_LIST}/${item.id}`}>
+                    {item.title}
+                  </Link>
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {seniorLifePost?.map((item) => (
-                <tr key={item.id}>
-                  <td>{item.id}</td>
-                  <td>
-                    <Link href={`${PAGE_URL_ENUM.SENIORLIFE_LIST}/${item.id}`}>
-                      {item.title}
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Fragment>
-      )}
+            ))}
+          </tbody>
+        </table>
+      </Fragment>
+      {/* )} */}
     </div>
   );
 }

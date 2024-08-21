@@ -31,7 +31,6 @@ export class BaseService extends DomainService {
     axios.interceptors.request.use(
       async (config) => {
         let authorization = config.headers.Authorization;
-
         const session = await getSession();
         console.log("session", session);
         if (session && session.accessToken) {
