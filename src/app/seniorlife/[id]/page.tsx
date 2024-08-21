@@ -17,16 +17,22 @@ export default function SeniorLifeDetail({ params }) {
   }, []);
 
   const getSeniorlifeDetail = async () => {
+    // const throwError = () => {
+    //   throw new Error("Sentry Test");
+    // };
+
+    // throwError();
+
     seniorLifeRequestDetailDto.id = id as string;
 
     await seniorLifeRequestDetailDto.validateDto();
     if (seniorLifeRequestDetailDto.isValid) {
-      const res = await serniorlifeService.findSeniorLifeDetail(
+      let res = await serniorlifeService.findSeniorLifeDetail(
         seniorLifeRequestDetailDto
       );
 
-      console.log("res", res);
-
+      console.log("res", res.data.data);
+      //throw new Error("This is a data error");
       if (res && res.status === API_STATUS_CODE_ENUM.STATUS_200) {
         setSeniorLifeDetail(res.data.data);
       }
