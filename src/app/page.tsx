@@ -26,6 +26,7 @@ export default function Home() {
   return (
     <div>
       <h1>Welcome to the JWT Auth Example</h1>
+
       {session ? (
         <Fragment>
           {/* <Link href="/protected">Go to Protected Page</Link> */}

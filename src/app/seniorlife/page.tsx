@@ -38,6 +38,7 @@ export default function SeniorLife() {
         console.log("[res data]", res);
 
         if (res && res?.status === 200) {
+          setSeniorLifePost(res.data.data.seniorLife);
         }
       } catch (error) {
         console.log("Error in findSeniorLife:", error);
