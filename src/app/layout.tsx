@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+// import { Inter } from "next/font/google";
 import AuthSessionProvider from "@/providers/auth-session-provider";
 // import "./globals.css";
 import AlertModal from "@/_components/modals/alert-modal/AlertModal";
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
