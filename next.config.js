@@ -7,6 +7,7 @@ const nextConfig = {
   // trailingSlash: true,
   swcMinify: true,
   reactStrictMode: true,
+  assetPrefix: ".",
   env: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
