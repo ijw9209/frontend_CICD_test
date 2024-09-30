@@ -20,7 +20,7 @@ pipeline {
             }
         }
 
-        stages('Check Docker') {
+        stage('Check Docker') {
             steps {
                 script {
                      // Docker 버전 확인
