@@ -20,12 +20,21 @@ pipeline {
             }
         }
 
+        stages('Check Docker') {
+            steps {
+                script {
+                     // Docker 버전 확인
+                    sh 'docker --version'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 echo 'Docker Build'
-                script {
-                    //DOcker 이미지를 빌드
-                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                    steps {
+                  // Docker 이미지를 빌드
+                sh 'docker build -t hello-world -f Dockerfile .'
                 }
             }
         }
