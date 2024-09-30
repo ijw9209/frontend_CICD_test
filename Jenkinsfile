@@ -32,10 +32,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Docker Build'
-                    steps {
                   // Docker 이미지를 빌드
                 sh 'docker build -t hello-world -f Dockerfile .'
-                }
             }
         }
         // stage('Build') {
