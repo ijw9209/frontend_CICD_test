@@ -23,8 +23,8 @@ pipeline {
         stage('Check Docker') {
             steps {
                 script {
-                     // Docker 버전 확인
-                    sh 'docker --version'
+                    
+                    sh 'docker ps'
                 }
             }
         }
