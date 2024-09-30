@@ -33,6 +33,7 @@ export default function SeniorLifeDetail({ params }) {
 
       console.log("res", res.data.data);
       //throw new Error("This is a data error");
+      //Test log
       if (res && res.status === API_STATUS_CODE_ENUM.STATUS_200) {
         setSeniorLifeDetail(res.data.data);
       }
