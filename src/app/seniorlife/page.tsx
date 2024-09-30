@@ -28,6 +28,8 @@ export default function SeniorLife() {
     seniorlifeSearchRequestDto.partnerDisplayYn = YN_ENUM.Y;
     seniorlifeSearchRequestDto.caregiverDisplayYn = YN_ENUM.Y;
 
+    //주석테스트트ㅡㅇ으으으으으응 되라
+
     await seniorlifeSearchRequestDto.validateDto();
 
     if (seniorlifeSearchRequestDto.isValid) {
