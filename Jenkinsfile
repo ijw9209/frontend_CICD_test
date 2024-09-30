@@ -4,6 +4,7 @@ pipeline {
      environment {
         SERVICE_NAME = "test-jenkins"
         IMAGE_NAME = "${SERVICE_NAME}:${env.GIT_COMMIT}"
+        IMAGE_TAG = 'latest'
         GIT_BRANCH = "${env.GIT_BRANCH}"
     }
 
