@@ -36,7 +36,6 @@ export default function SeniorLifeDetail({ params }) {
       if (res && res.status === API_STATUS_CODE_ENUM.STATUS_200) {
         setSeniorLifeDetail(res.data.data);
       }
-      //코드 수정테스트..
     }
   };
 
