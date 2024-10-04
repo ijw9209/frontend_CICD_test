@@ -7,7 +7,7 @@ pipeline {
         SERVICE_NAME = "next-cicd-test"
         CONTAINTER_NAME = "${SERVICE_NAME}-${BRANCH_NAME}"
         IMAGE_NAME = "${SERVICE_NAME}-${BRANCH_NAME}:${env.BUILD_ID}"
-        IMAGE_TAG = 'latest'
+        // IMAGE_TAG = 'latest'
         GIT_BRANCH = "${env.GIT_BRANCH}"
 
     }
@@ -63,16 +63,6 @@ pipeline {
             }
         }
 
-        // stage('Run Tests') {
-        //     steps {
-        //         script {
-        //             // 컨테이너에서 테스트 실행 (테스트 명령어에 따라 수정)
-        //             docker.image("my-nextjs-app:${env.BUILD_ID}").inside {
-        //                 sh 'npm test'
-        //             }
-        //         }
-        //     }
-        // }
 
         stage('Stop current') {
             steps {
@@ -91,119 +81,8 @@ pipeline {
                    sh "docker ps"
 
 
-                //    // temp 컨테이너 제거
-                //    sh '''
-                //     docker stop next-cicd-test-temp || true
-                //     docker rm next-cicd-test-temp || true
-                //    '''
-
-                //    // Docker 컨테이너 실행 (필요에 따라 수정)
-                //    sh "docker run -d -p 3100:3000 --name next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
-                           
-                //    // 기존 컨테이너가 존재하면 제거
-                //    sh '''
-                //    if [ "$(docker ps -aq -f name=next-cicd-test-${BRANCH_NAME})" ]; then
-                //        docker stop next-cicd-test-${BRANCH_NAME}
-                //        docker rm next-cicd-test-${BRANCH_NAME}
-                //    fi
-                //    '''
-                           
-                //    // 기존 컨테이너 이름 변경
-                //    sh '''
-                //    if [ "$(docker ps -aq -f name=next-cicd-test-${BRANCH_NAME})" ]; then
-                //        docker rename next-cicd-test-${BRANCH_NAME} next-cicd-test-old
-                //    fi
-                //    '''
-                   
-                //    // 새 컨테이너를 기존 컨테이너 이름으로 변경
-                //    sh '''
-                //    if [ "$(docker ps -aq -f name=next-cicd-test-temp)" ]; then
-                //        docker rename next-cicd-test-temp next-cicd-test-${BRANCH_NAME}
-                //    fi
-                //    '''
-                   
-                //    // 기존 컨테이너 제거 (필요한 경우)
-                //    sh '''
-                //    if [ "$(docker ps -aq -f name=next-cicd-test-old)" ]; then
-                //        docker rm next-cicd-test-old
-                //    fi
-                //    '''
-
-
-                //  // temp 컨테이너 제거
-                //    sh '''
-                //     docker stop next-cicd-test-temp || true
-                //     docker rm next-cicd-test-temp || true
-                //    '''
-
-                //    // 잠시 대기
-                //    sh "sleep 2"
-
-
-                //  // 새로운 컨테이너 실행
-                //    sh "docker run -d -p 3100:3000 --name next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
-                   
-                //    // NGINX 설정 파일 업데이트
-                //    sh """
-                //    sed -i 's/upstream_frontend_port/3100/' /etc/nginx/nginx.conf
-                //    """
-                   
-                //    sh "nginx -t"
-                //    // NGINX 리로드
-                //    //sh "sudo service nginx reload"
-                //    sh "sudo nginx -s reload"
-                   
-                //    // 기존 컨테이너 정리
-                //    sh """
-                //    docker stop next-cicd-test-${env.BRANCH_NAME} || true
-                //    docker rm next-cicd-test-${env.BRANCH_NAME} || true
-                //    """
-                   
-                //    // 새로운 컨테이너 이름 변경
-                //    sh "docker rename next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}"
-
-
-                //    // temp 컨테이너 제거
-                //    sh '''
-                //     docker stop next-cicd-test-temp || true
-                //     docker rm next-cicd-test-temp || true
-                //    '''
-
-                   // 현재 실행 중인 컨테이너 목록 출력
                 }
             }
         }
-
-        // post {
-        //         always {
-        //         // 정리 작업
-        //         echo "Cleaning up..."
-        //         sh 'docker rmi next-cicd-test:${env.BUILD_ID}' // 빌드 후 이미지 정리
-        //     }
-        // }
-        // stage('Build') {
-        //     steps {
-        //         echo 'Building the application...'
-        //         // 빌드 단계
-        //     }
-        // }
-
-        // stage('Test') {
-        //     steps {
-        //         echo 'Running tests...'
-        //         // 테스트 단계
-        //     }
-        // }
-
-        // stage('Deploy') {
-        //     when {
-        //         // 특정 브랜치에 머지될 때만 배포
-        //         branch 'dev'  // 또는 'prod', 'master'로 설정
-        //     }
-        //     steps {
-        //         echo 'Deploying the application...'
-        //         // 배포 단계 (예: 서버에 파일 복사 또는 Docker 이미지 배포)
-        //     }
-        // }
     }
 }
