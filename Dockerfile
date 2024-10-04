@@ -31,8 +31,14 @@ COPY .env.development .env.development
 
 # 구축 환경에 따라 env 변수를 다르게 가져가야 하는 경우 환경 변수를 이용해서 env를 구분해준다.
 #COPY .env.$ENV_MODE ./.env.production
-RUN npm run build
-
+RUN if [ "$ENV_MODE" = "dev" ]; then \
+      npm run build:dev \
+    elif [ "$ENV_MODE" = "main" ]; then \
+      npm run build:prod \
+    else \
+      echo "현재 ENV_MODE : $ENV_MODE" \
+    fi
+ 
 
 ###########################################################
 
