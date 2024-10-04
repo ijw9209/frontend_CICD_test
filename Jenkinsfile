@@ -117,6 +117,12 @@ pipeline {
                 //    '''
 
 
+                 // temp 컨테이너 제거
+                   sh '''
+                    docker stop next-cicd-test-temp || true
+                    docker rm next-cicd-test-temp || true
+                   '''
+
 
                  // 새로운 컨테이너 실행
                    sh "docker run -d -p 3100:3000 --name next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
@@ -153,13 +159,13 @@ pipeline {
             }
         }
 
-        // post {
-        //         always {
-        //         // 정리 작업
-        //         echo "Cleaning up..."
-        //         sh 'docker rmi next-cicd-test:${env.BUILD_ID}' // 빌드 후 이미지 정리
-        //     }
-        // }
+        post {
+                always {
+                // 정리 작업
+                echo "Cleaning up..."
+                sh 'docker rmi next-cicd-test:${env.BUILD_ID}' // 빌드 후 이미지 정리
+            }
+        }
         // stage('Build') {
         //     steps {
         //         echo 'Building the application...'
