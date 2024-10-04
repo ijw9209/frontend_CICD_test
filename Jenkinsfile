@@ -78,7 +78,7 @@ pipeline {
             steps {
                 echo "Stop previous version"
                 script {
-                  sh "docker ps -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f"
+                  sh "docker ps -q --filter name=${env.CONTAINTER_NAME} | xargs -r docker rm -f"
                 }
             }
         }
