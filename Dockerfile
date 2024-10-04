@@ -19,7 +19,7 @@ FROM node:18-alpine AS builder
 # Docker를 build할때 개발 모드 구분용 환경 변수를 명시함
 ARG ENV_MODE 
 WORKDIR /usr/src/app
-COPY --from=deps /app/node_modules ./node_modules
+COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
 COPY .env .env
 
