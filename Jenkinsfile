@@ -79,7 +79,10 @@ pipeline {
                    // sh "docker run -d -p 3000:3000 --name next-cicd-test-${env.BRANCH_NAME} next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
 
                    // temp 컨테이너 제거
-                   sh "docker rm next-cicd-test-temp || true"
+                   sh '''
+                    docker stop next-cicd-test-temp || true
+                    docker rm next-cicd-test-temp || true
+                   '''
 
                    // Docker 컨테이너 실행 (필요에 따라 수정)
                    sh "docker run -d -p 3100:3000 --name next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
@@ -102,7 +105,11 @@ pipeline {
                    sh "docker rm next-cicd-test-old"
 
                    // temp 컨테이너 제거
-                   sh "docker rm next-cicd-test-temp || true"
+                   sh '''
+                    docker stop next-cicd-test-temp || true
+                    docker rm next-cicd-test-temp || true
+                   '''
+
                    // 현재 실행 중인 컨테이너 목록 출력
                    sh "docker ps"
                 }
