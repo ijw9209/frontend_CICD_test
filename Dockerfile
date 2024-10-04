@@ -33,15 +33,14 @@ COPY .env.development .env.development
 #COPY .env.$ENV_MODE ./.env.production
 RUN if [ "$ENV_MODE" = "dev" ]; then \
       echo "현재 ENV_MODE : $ENV_MODE, 개발 빌드 실행"; \
-      npm run build:dev \
+      npm run build:dev; \
     elif [ "$ENV_MODE" = "main" ]; then \
-        echo "현재 ENV_MODE : $ENV_MODE, 프로덕션 빌드 실행"; \
-      npm run build:prod \
+      echo "현재 ENV_MODE : $ENV_MODE, 프로덕션 빌드 실행"; \
+      npm run build:prod; \
     else \
-        echo "유효하지 않은 ENV_MODE: $ENV_MODE"; \
-        exit 1; \
+      echo "유효하지 않은 ENV_MODE: $ENV_MODE"; \
+      exit 1; \
     fi
- 
 
 ###########################################################
 
