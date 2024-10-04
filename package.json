@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "npm run config && next dev",
     "build": "npm run config && next build",
+    "build:dev": "env-cmd -f .env.development next build",
+    "build:prod": "env-cmd -f .env.production next build",
     "config:deploy": "node environment-generate.ts",
     "build:deploy": "CI=false npm run config:deploy && next build",
     "start": "next start",

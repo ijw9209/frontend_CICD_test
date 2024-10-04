@@ -7,17 +7,36 @@ pipeline {
         IMAGE_TAG = 'latest'
         GIT_BRANCH = "${env.GIT_BRANCH}"
 
-        ENV_MODE = 'production'  // 환경 변수를 Jenkins에서 설정
+        BRANCH_NAME = "${env.GIT_BRANCH.replace('origin/', '')}" // Strip 'origin/' from the branch name
     }
 
 
     stages {
+
+        stage('Set Environment') {
+            steps {
+                script {
+                    // 브랜치 이름에 따라 환경 변수 설정
+                    if (env.BRANCH_NAME == 'dev') {
+                        env.ENV_MODE = 'dev'
+                    } else if (env.BRANCH_NAME == 'main') {
+                        env.ENV_MODE = 'main'
+                    } 
+                    // 설정된 환경 변수 출력
+                    echo "Environment Mode: ${env.ENV_MODE}"
+                }
+            }
+        }
+
+
         stage('Checkout') {
             steps {
                 echo 'Cloning the repository...'
                 echo 'testing..'
                 echo "GIT_COMMIT:  ${env.GIT_COMMIT}"
                 echo "GIT_BRANCH: ${env.GIT_BRANCH}"
+
+                echo "Current Branch: ${BRANCH_NAME}"
                 git branch: 'dev', url: 'https://github.com/ijw9209/frontend_CICD_test.git'
             }
         }
@@ -37,7 +56,7 @@ pipeline {
                 // sh "docker build ENV_MODE=${ENV_MODE} -t test-cicd -f Dockerfile ."
                 script {
                     // Docker 이미지를 빌드
-                    def image = docker.build("next-cicd-test-${env.GIT_BRANCH}:${env.BUILD_ID}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+                    def image = docker.build("next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                 }
             }
         }
@@ -57,7 +76,7 @@ pipeline {
             steps {
                 script {
                     // Docker 컨테이너 실행 (필요에 따라 수정)
-                    sh "docker run -d -p 3000:3000 --name next-cicd-test-${env.GIT_BRANCH} next-cicd-test:${env.BUILD_ID}}"
+                    sh "docker run -d -p 3000:3000 --name next-cicd-test-${env.BRANCH_NAME} next-cicd-test:${env.BUILD_ID}}"
                 }
             }
         }
