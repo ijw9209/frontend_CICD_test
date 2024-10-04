@@ -2,12 +2,14 @@ pipeline {
     agent any
 
      environment {
-        SERVICE_NAME = "test-jenkins"
-        IMAGE_NAME = "${SERVICE_NAME}:${env.GIT_COMMIT}"
+        BRANCH_NAME = "${env.GIT_BRANCH.replace('origin/', '')}" // Strip 'origin/' from the branch name
+
+        SERVICE_NAME = "next-cicd-test"
+        CONTAINTER_NAME = "${SERVICE_NAME}-${BRANCH_NAME}"
+        IMAGE_NAME = "${SERVICE_NAME}-${BRANCH_NAME}:${env.BUILD_ID}"
         IMAGE_TAG = 'latest'
         GIT_BRANCH = "${env.GIT_BRANCH}"
 
-        BRANCH_NAME = "${env.GIT_BRANCH.replace('origin/', '')}" // Strip 'origin/' from the branch name
     }
 
 
@@ -56,7 +58,7 @@ pipeline {
                 // sh "docker build ENV_MODE=${ENV_MODE} -t test-cicd -f Dockerfile ."
                 script {
                     // Docker 이미지를 빌드
-                    def image = docker.build("next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+                    def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                 }
             }
         }
@@ -72,11 +74,20 @@ pipeline {
         //     }
         // }
 
+        stage('Stop current') {
+            steps {
+                echo "Stop previous version"
+                script {
+                  sh "docker ps -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f"
+                }
+            }
+        }
+
         stage('Deploy') {
             steps {
                 script {
                 //    // Docker 컨테이너 실행 (필요에 따라 수정)
-                   sh "docker run -dit -p 3000:3000 --name next-cicd-test-${env.BRANCH_NAME} next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
+                   sh "docker run -dit -p 3000:3000 --name ${env.SERVICE_NAME} ${env.IMAGE_NAME}"
 
                 //    // temp 컨테이너 제거
                 //    sh '''
