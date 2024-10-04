@@ -6,6 +6,10 @@ pipeline {
         IMAGE_NAME = "${SERVICE_NAME}:${env.GIT_COMMIT}"
         IMAGE_TAG = 'latest'
         GIT_BRANCH = "${env.GIT_BRANCH}"
+
+        environment {
+            ENV_MODE = 'production'  // 환경 변수를 Jenkins에서 설정
+        }
     }
 
 
@@ -23,7 +27,6 @@ pipeline {
         stage('Check Docker') {
             steps {
                 script {
-                    
                     sh 'docker ps'
                 }
             }
@@ -33,7 +36,39 @@ pipeline {
             steps {
                 echo 'Docker Build'
                   // Docker 이미지를 빌드
-                sh 'docker build -t hello-world -f Dockerfile .'
+                // sh "docker build ENV_MODE=${ENV_MODE} -t test-cicd -f Dockerfile ."
+                script {
+                    // Docker 이미지를 빌드
+                    def image = docker.build("next-cicd-test-${env.GIT_BRANCH}:${env.BUILD_ID}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+                }
+            }
+        }
+
+        // stage('Run Tests') {
+        //     steps {
+        //         script {
+        //             // 컨테이너에서 테스트 실행 (테스트 명령어에 따라 수정)
+        //             docker.image("my-nextjs-app:${env.BUILD_ID}").inside {
+        //                 sh 'npm test'
+        //             }
+        //         }
+        //     }
+        // }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    // Docker 컨테이너 실행 (필요에 따라 수정)
+                    sh "docker run -d -p 3000:3000 --name next-cicd-test-${env.GIT_BRANCH} next-cicd-test:${env.BUILD_ID}}"
+                }
+            }
+        }
+
+        post {
+                always {
+                // 정리 작업
+                echo "Cleaning up..."
+                sh 'docker rmi next-cicd-test:${env.BUILD_ID}' // 빌드 후 이미지 정리
             }
         }
         // stage('Build') {
