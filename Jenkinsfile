@@ -76,7 +76,7 @@ pipeline {
             steps {
                 script {
                    // Docker 컨테이너 실행 (필요에 따라 수정)
-                   // sh "docker run -d -p 3000:3000 --name next-cicd-test-${env.BRANCH_NAME} next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
+                   sh "docker run -d -p 3000:3000 --name next-cicd-test-${env.BRANCH_NAME} next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
 
                    // temp 컨테이너 제거
                    sh '''
