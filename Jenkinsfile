@@ -123,6 +123,9 @@ pipeline {
                     docker rm next-cicd-test-temp || true
                    '''
 
+                   // 잠시 대기
+                   sh "sleep 2"
+
 
                  // 새로운 컨테이너 실행
                    sh "docker run -d -p 3100:3000 --name next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
