@@ -7,9 +7,7 @@ pipeline {
         IMAGE_TAG = 'latest'
         GIT_BRANCH = "${env.GIT_BRANCH}"
 
-        environment {
-            ENV_MODE = 'production'  // 환경 변수를 Jenkins에서 설정
-        }
+        ENV_MODE = 'production'  // 환경 변수를 Jenkins에서 설정
     }
 
 
