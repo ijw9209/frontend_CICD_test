@@ -76,7 +76,7 @@ pipeline {
             steps {
                 script {
                 //    // Docker 컨테이너 실행 (필요에 따라 수정)
-                //    sh "docker run -d -p 3000:3000 --name next-cicd-test-${env.BRANCH_NAME} next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
+                   sh "docker run -dit -p 3000:3000 --name next-cicd-test-${env.BRANCH_NAME} next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
 
                 //    // temp 컨테이너 제거
                 //    sh '''
@@ -117,44 +117,44 @@ pipeline {
                 //    '''
 
 
-                 // temp 컨테이너 제거
-                   sh '''
-                    docker stop next-cicd-test-temp || true
-                    docker rm next-cicd-test-temp || true
-                   '''
+                //  // temp 컨테이너 제거
+                //    sh '''
+                //     docker stop next-cicd-test-temp || true
+                //     docker rm next-cicd-test-temp || true
+                //    '''
 
-                   // 잠시 대기
-                   sh "sleep 2"
+                //    // 잠시 대기
+                //    sh "sleep 2"
 
 
-                 // 새로운 컨테이너 실행
-                   sh "docker run -d -p 3100:3000 --name next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
+                //  // 새로운 컨테이너 실행
+                //    sh "docker run -d -p 3100:3000 --name next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
                    
-                   // NGINX 설정 파일 업데이트
-                   sh """
-                   sed -i 's/upstream_frontend_port/3100/' /etc/nginx/nginx.conf
-                   """
+                //    // NGINX 설정 파일 업데이트
+                //    sh """
+                //    sed -i 's/upstream_frontend_port/3100/' /etc/nginx/nginx.conf
+                //    """
                    
-                   sh "nginx -t"
-                   // NGINX 리로드
-                   //sh "sudo service nginx reload"
-                   sh "sudo nginx -s reload"
+                //    sh "nginx -t"
+                //    // NGINX 리로드
+                //    //sh "sudo service nginx reload"
+                //    sh "sudo nginx -s reload"
                    
-                   // 기존 컨테이너 정리
-                   sh """
-                   docker stop next-cicd-test-${env.BRANCH_NAME} || true
-                   docker rm next-cicd-test-${env.BRANCH_NAME} || true
-                   """
+                //    // 기존 컨테이너 정리
+                //    sh """
+                //    docker stop next-cicd-test-${env.BRANCH_NAME} || true
+                //    docker rm next-cicd-test-${env.BRANCH_NAME} || true
+                //    """
                    
-                   // 새로운 컨테이너 이름 변경
-                   sh "docker rename next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}"
+                //    // 새로운 컨테이너 이름 변경
+                //    sh "docker rename next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}"
 
 
-                   // temp 컨테이너 제거
-                   sh '''
-                    docker stop next-cicd-test-temp || true
-                    docker rm next-cicd-test-temp || true
-                   '''
+                //    // temp 컨테이너 제거
+                //    sh '''
+                //     docker stop next-cicd-test-temp || true
+                //     docker rm next-cicd-test-temp || true
+                //    '''
 
                    // 현재 실행 중인 컨테이너 목록 출력
                    sh "docker ps"
