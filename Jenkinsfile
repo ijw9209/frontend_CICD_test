@@ -75,46 +75,71 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                   // Docker 컨테이너 실행 (필요에 따라 수정)
-                   sh "docker run -d -p 3000:3000 --name next-cicd-test-${env.BRANCH_NAME} next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
+                //    // Docker 컨테이너 실행 (필요에 따라 수정)
+                //    sh "docker run -d -p 3000:3000 --name next-cicd-test-${env.BRANCH_NAME} next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
 
-                   // temp 컨테이너 제거
-                   sh '''
-                    docker stop next-cicd-test-temp || true
-                    docker rm next-cicd-test-temp || true
-                   '''
+                //    // temp 컨테이너 제거
+                //    sh '''
+                //     docker stop next-cicd-test-temp || true
+                //     docker rm next-cicd-test-temp || true
+                //    '''
 
-                   // Docker 컨테이너 실행 (필요에 따라 수정)
+                //    // Docker 컨테이너 실행 (필요에 따라 수정)
+                //    sh "docker run -d -p 3100:3000 --name next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
+                           
+                //    // 기존 컨테이너가 존재하면 제거
+                //    sh '''
+                //    if [ "$(docker ps -aq -f name=next-cicd-test-${BRANCH_NAME})" ]; then
+                //        docker stop next-cicd-test-${BRANCH_NAME}
+                //        docker rm next-cicd-test-${BRANCH_NAME}
+                //    fi
+                //    '''
+                           
+                //    // 기존 컨테이너 이름 변경
+                //    sh '''
+                //    if [ "$(docker ps -aq -f name=next-cicd-test-${BRANCH_NAME})" ]; then
+                //        docker rename next-cicd-test-${BRANCH_NAME} next-cicd-test-old
+                //    fi
+                //    '''
+                   
+                //    // 새 컨테이너를 기존 컨테이너 이름으로 변경
+                //    sh '''
+                //    if [ "$(docker ps -aq -f name=next-cicd-test-temp)" ]; then
+                //        docker rename next-cicd-test-temp next-cicd-test-${BRANCH_NAME}
+                //    fi
+                //    '''
+                   
+                //    // 기존 컨테이너 제거 (필요한 경우)
+                //    sh '''
+                //    if [ "$(docker ps -aq -f name=next-cicd-test-old)" ]; then
+                //        docker rm next-cicd-test-old
+                //    fi
+                //    '''
+
+
+
+                 // 새로운 컨테이너 실행
                    sh "docker run -d -p 3100:3000 --name next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}:${env.BUILD_ID}"
-                           
-                   // 기존 컨테이너가 존재하면 제거
-                   sh '''
-                   if [ "$(docker ps -aq -f name=next-cicd-test-${BRANCH_NAME})" ]; then
-                       docker stop next-cicd-test-${BRANCH_NAME}
-                       docker rm next-cicd-test-${BRANCH_NAME}
-                   fi
-                   '''
-                           
-                   // 기존 컨테이너 이름 변경
-                   sh '''
-                   if [ "$(docker ps -aq -f name=next-cicd-test-${BRANCH_NAME})" ]; then
-                       docker rename next-cicd-test-${BRANCH_NAME} next-cicd-test-old
-                   fi
-                   '''
                    
-                   // 새 컨테이너를 기존 컨테이너 이름으로 변경
-                   sh '''
-                   if [ "$(docker ps -aq -f name=next-cicd-test-temp)" ]; then
-                       docker rename next-cicd-test-temp next-cicd-test-${BRANCH_NAME}
-                   fi
-                   '''
+                   // NGINX 설정 파일 업데이트
+                   sh """
+                   sed -i 's/upstream_frontend_port/3100/' /etc/nginx/nginx.conf
+                   """
                    
-                   // 기존 컨테이너 제거 (필요한 경우)
-                   sh '''
-                   if [ "$(docker ps -aq -f name=next-cicd-test-old)" ]; then
-                       docker rm next-cicd-test-old
-                   fi
-                   '''
+                   sh "nginx -t"
+                   // NGINX 리로드
+                   //sh "sudo service nginx reload"
+                   sh "sudo nginx -s reload"
+                   
+                   // 기존 컨테이너 정리
+                   sh """
+                   docker stop next-cicd-test-${env.BRANCH_NAME} || true
+                   docker rm next-cicd-test-${env.BRANCH_NAME} || true
+                   """
+                   
+                   // 새로운 컨테이너 이름 변경
+                   sh "docker rename next-cicd-test-temp next-cicd-test-${env.BRANCH_NAME}"
+
 
                    // temp 컨테이너 제거
                    sh '''
