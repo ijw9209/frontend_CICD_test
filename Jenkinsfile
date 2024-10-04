@@ -96,13 +96,25 @@ pipeline {
                    '''
                            
                    // 기존 컨테이너 이름 변경
-                   sh "docker rename next-cicd-test-${BRANCH_NAME} next-cicd-test-old"
-                           
+                   sh '''
+                   if [ "$(docker ps -aq -f name=next-cicd-test-${BRANCH_NAME})" ]; then
+                       docker rename next-cicd-test-${BRANCH_NAME} next-cicd-test-old
+                   fi
+                   '''
+                   
                    // 새 컨테이너를 기존 컨테이너 이름으로 변경
-                   sh "docker rename next-cicd-test-temp next-cicd-test-${BRANCH_NAME}"
-                    
+                   sh '''
+                   if [ "$(docker ps -aq -f name=next-cicd-test-temp)" ]; then
+                       docker rename next-cicd-test-temp next-cicd-test-${BRANCH_NAME}
+                   fi
+                   '''
+                   
                    // 기존 컨테이너 제거 (필요한 경우)
-                   sh "docker rm next-cicd-test-old"
+                   sh '''
+                   if [ "$(docker ps -aq -f name=next-cicd-test-old)" ]; then
+                       docker rm next-cicd-test-old
+                   fi
+                   '''
 
                    // temp 컨테이너 제거
                    sh '''
