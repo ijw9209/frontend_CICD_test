@@ -87,7 +87,7 @@ pipeline {
             steps {
                 script {
                 //    // Docker 컨테이너 실행 (필요에 따라 수정)
-                   sh "docker run -dit -p 3000:3000 --name ${env.SERVICE_NAME} ${env.IMAGE_NAME}"
+                   sh "docker run -dit -p 3000:3000 --name ${env.CONTAINTER_NAME} ${env.IMAGE_NAME}"
 
                 //    // temp 컨테이너 제거
                 //    sh '''
