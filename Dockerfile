@@ -12,6 +12,11 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /usr/src/app
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
+
+# 의존성 설치
+RUN npm install  
+RUN ls -la /usr/src/app  
+
 # 2단계: next.js 빌드 단계
 FROM node:18-alpine AS builder
 
