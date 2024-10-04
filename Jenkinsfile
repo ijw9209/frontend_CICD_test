@@ -78,7 +78,7 @@ pipeline {
             steps {
                 echo "Stop previous version"
                 script {
-                  sh "docker ps -q --filter name=${env.CONTAINTER_NAME} | xargs -r docker rm -f"
+                  sh "docker ps -q --filter name=${SERVICE_NAME} | xargs -r docker rm -f"
                 }
             }
         }
@@ -87,7 +87,9 @@ pipeline {
             steps {
                 script {
                 //    // Docker 컨테이너 실행 (필요에 따라 수정)
-                   sh "docker run -dit -p 3000:3000 --name ${env.CONTAINTER_NAME} ${env.IMAGE_NAME}"
+                   sh "docker run -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${IMAGE_NAME}"
+                   sh "docker ps"
+
 
                 //    // temp 컨테이너 제거
                 //    sh '''
@@ -168,7 +170,6 @@ pipeline {
                 //    '''
 
                    // 현재 실행 중인 컨테이너 목록 출력
-                   sh "docker ps"
                 }
             }
         }
