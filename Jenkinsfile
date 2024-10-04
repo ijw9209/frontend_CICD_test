@@ -14,7 +14,6 @@ pipeline {
 
 
     stages {
-
         stage('Set Environment') {
             steps {
                 script {
@@ -33,13 +32,26 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Cloning the repository...'
-                echo 'testing..'
-                echo "GIT_COMMIT:  ${env.GIT_COMMIT}"
-                echo "GIT_BRANCH: ${env.GIT_BRANCH}"
 
-                echo "Current Branch: ${BRANCH_NAME}"
-                git branch: 'dev', url: 'https://github.com/ijw9209/frontend_CICD_test.git'
+                script {
+                    echo 'Cloning the repository...'
+                    echo 'testing..'
+                    echo "GIT_COMMIT:  ${env.GIT_COMMIT}"
+                    echo "GIT_BRANCH: ${env.GIT_BRANCH}"
+
+                    echo "Current Branch: ${BRANCH_NAME}"
+
+                    if (env.BRANCH_NAME == 'dev') {
+
+                        git branch: 'dev', url: 'https://github.com/ijw9209/frontend_CICD_test.git'
+                    }else if(env.BRANCH_NAME == 'main') {
+                        git branch: 'main', url: 'https://github.com/ijw9209/frontend_CICD_test.git'
+                    } else {
+                        echo 'No specific branch checked out, using default branch...'
+                        git url: 'https://github.com/ijw9209/frontend_CICD_test.git'
+                    }
+
+                }
             }
         }
 
