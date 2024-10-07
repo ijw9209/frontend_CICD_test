@@ -84,7 +84,7 @@ pipeline {
                     // Docker 이미지를 빌드
                     //def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                     
-                    def image = docker.build("${REPO_NAME}:${env.BUILD_ID}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+                    def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                 }
             }
         }
