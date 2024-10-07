@@ -27,7 +27,7 @@ WORKDIR /usr/src/app
 COPY --from=deps /usr/src/app/node_modules ./node_modules
 COPY . .
 COPY .env.development .env.development
-
+COPY .env.production .env.production
 
 # 구축 환경에 따라 env 변수를 다르게 가져가야 하는 경우 환경 변수를 이용해서 env를 구분해준다.
 #COPY .env.$ENV_MODE ./.env.production
