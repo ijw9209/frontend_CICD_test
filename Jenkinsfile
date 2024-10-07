@@ -79,7 +79,7 @@ pipeline {
             steps {
                 echo "Stop previous version"
                 script {
-                  sh "docker ps -a -q --filter name=${SERVICE_NAME} | xargs -r docker rm -f"
+                  sh "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f", returnStatus: true 
                 }
             }
         }
@@ -87,10 +87,16 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+
+                   if (env.BRANCH_NAME == 'dev') {
                 //    // Docker 컨테이너 실행 (필요에 따라 수정)
                    sh "docker run -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${IMAGE_NAME}"
-                   sh "docker ps"
 
+                   }else if(env.BRANCH_NAME == 'main') {
+                   sh "docker run -dit --name ${CONTAINTER_NAME} -p 3100:3000 ${IMAGE_NAME}"
+                   }
+
+                   sh "docker ps"
 
                 }
             }
