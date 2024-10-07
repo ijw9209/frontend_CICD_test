@@ -79,7 +79,11 @@ pipeline {
             steps {
                 echo "Stop previous version"
                 script {
-                  sh "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f", returnStatus: true 
+                //   sh "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f"
+                    def result = sh script: "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f", returnStatus: true
+                    if (result != 0) {
+                        echo "No container to stop or an error occurred, but continuing..."
+                    }
                 }
             }
         }
