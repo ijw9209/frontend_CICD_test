@@ -4,12 +4,14 @@ pipeline {
      environment {
         BRANCH_NAME = "${env.GIT_BRANCH.replace('origin/', '')}" // Strip 'origin/' from the branch name
 
+        // docker hub test
         SERVICE_NAME = "ijw9209/next-cicd-test"
         CONTAINTER_NAME = "${SERVICE_NAME}-${BRANCH_NAME}"
         IMAGE_NAME = "${SERVICE_NAME}-${BRANCH_NAME}:${env.BUILD_ID}"
         // IMAGE_TAG = 'latest'
         GIT_BRANCH = "${env.GIT_BRANCH}"
 
+        // docker hub test
         DOCKERHUB_CREDENTIALS = credentials('Dockerhub-access-token') // jenkins에 등록해 놓은 docker hub credentials 이름
 
 
@@ -65,6 +67,12 @@ pipeline {
             }
         }
 
+        stage('Login'){
+          steps{
+              sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin" // docker hub 로그인
+          }
+      }
+
         stage('Build Docker Image') {
             steps {
                 echo 'Docker Build'
@@ -73,21 +81,19 @@ pipeline {
                 script {
                     // Docker 이미지를 빌드
                     //def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+                    
                     def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                 }
             }
         }
-
-        stage("Dockerhub Push") {
-            steps {
-                echo 'Dockerhub push'
-                script {
-                    docker.withRegistry('', DOCKERHUB_CREDENTIALS){
-                        dockerImage.push("1.0")
-                    }
-                }
-            }
-        }
+        // docker hub test
+        stage('Deploy our image') { 
+          steps { 
+              script {
+                sh "docker push $repository:$BUILD_NUMBER" //docker push
+              } 
+          }
+        } 
 
         // stage('Stop current') {
         //     steps {
