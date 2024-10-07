@@ -42,7 +42,6 @@ pipeline {
                     echo "Current Branch: ${BRANCH_NAME}"
 
                     if (env.BRANCH_NAME == 'dev') {
-
                         git branch: 'dev', url: 'https://github.com/ijw9209/frontend_CICD_test.git'
                     }else if(env.BRANCH_NAME == 'main') {
                         git branch: 'main', url: 'https://github.com/ijw9209/frontend_CICD_test.git'
