@@ -87,13 +87,38 @@ pipeline {
             }
         }
         // docker hub test
-        stage('Deploy our image') { 
+        stage('Docker hub push') { 
           steps { 
               script {
                 sh "docker push ${IMAGE_NAME}" //docker push
               } 
           }
         } 
+
+        stage('Docker hub pull') { 
+          steps { 
+              script {
+                "docker pull ${IMAGE_NAME}"
+              } 
+          }
+        }
+
+        stage('Stop current') {
+            echo "Stop previous version"
+            def result = sh script: "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f", returnStatus: true
+            if (result != 0) {
+                echo "No container to stop or an error occurred, but continuing..."
+            }
+        }
+
+        stage('Deploy') {
+            echo "Deploy"
+            steps {
+                script {
+                    sh "docker run -dit --name ${IMAGE_NAME} -p 3200:3000 ${IMAGE_NAME}"
+                }
+            }
+        }
 
         // stage('Stop current') {
         //     steps {
@@ -108,22 +133,22 @@ pipeline {
         //     }
         // }
 
-        stage('Deploy') {
-            steps {
-                script {
+        // stage('Deploy') {
+        //     steps {
+        //         script {
 
-                   if (env.BRANCH_NAME == 'dev') {
-                //    // Docker 컨테이너 실행 (필요에 따라 수정)
-                   sh "docker run -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${IMAGE_NAME}"
+        //            if (env.BRANCH_NAME == 'dev') {
+        //         //    // Docker 컨테이너 실행 (필요에 따라 수정)
+        //            sh "docker run -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${IMAGE_NAME}"
 
-                   }else if(env.BRANCH_NAME == 'main') {
-                   sh "docker run -dit --name ${CONTAINTER_NAME} -p 3100:3000 ${IMAGE_NAME}"
-                   }
+        //            }else if(env.BRANCH_NAME == 'main') {
+        //            sh "docker run -dit --name ${CONTAINTER_NAME} -p 3100:3000 ${IMAGE_NAME}"
+        //            }
 
-                   sh "docker ps"
+        //            sh "docker ps"
 
-                }
-            }
-        }
+        //         }
+        //     }
+        // }
     }
 }
