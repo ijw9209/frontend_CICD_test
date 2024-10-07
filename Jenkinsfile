@@ -71,7 +71,7 @@ pipeline {
           steps{
               sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin" // docker hub 로그인
           }
-      }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -90,7 +90,7 @@ pipeline {
         stage('Deploy our image') { 
           steps { 
               script {
-                sh "docker push $repository:$BUILD_NUMBER" //docker push
+                sh "docker push ${SERVICE_NAME}:$BUILD_NUMBER" //docker push
               } 
           }
         } 
