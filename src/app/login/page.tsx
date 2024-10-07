@@ -40,7 +40,7 @@ export default function Login() {
         setError(authRequestDto.errors.password);
       }
     }
-
+    //빌트 테스트용 커밋
     console.log(authRequestDto.errors);
   };
 
