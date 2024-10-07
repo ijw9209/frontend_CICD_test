@@ -46,6 +46,7 @@ export default function Login() {
 
   return (
     <div>
+      <img style={{ width: 200 }} src="/vercel.svg"></img>
       <h1>Login TEST</h1>
       <form onSubmit={handleSubmit}>
         <div>
