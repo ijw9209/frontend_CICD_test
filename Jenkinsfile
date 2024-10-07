@@ -5,7 +5,9 @@ pipeline {
         BRANCH_NAME = "${env.GIT_BRANCH.replace('origin/', '')}" // Strip 'origin/' from the branch name
 
         // docker hub test
-        SERVICE_NAME = "ijw9209/next-cicd-test"
+        SERVICE_NAME = "next-cicd-test"
+
+        REPO_NAME = "ijw9209/next-cicd-test-${BRANCH_NAME}"
         CONTAINTER_NAME = "${SERVICE_NAME}-${BRANCH_NAME}"
         IMAGE_NAME = "${SERVICE_NAME}-${BRANCH_NAME}:${env.BUILD_ID}"
         // IMAGE_TAG = 'latest'
@@ -69,7 +71,7 @@ pipeline {
 
         stage('Login'){
           steps{
-              sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin" // docker hub 로그인
+              sh "docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin" // docker hub 로그인
           }
         }
 
@@ -90,7 +92,7 @@ pipeline {
         stage('Docker hub push') { 
           steps { 
               script {
-                sh "docker push ${IMAGE_NAME}" //docker push
+                sh "docker push ${REPO_NAME}" //docker push
               } 
           }
         } 
@@ -98,7 +100,7 @@ pipeline {
         stage('Docker hub pull') { 
           steps { 
               script {
-                "docker pull ${IMAGE_NAME}"
+                "docker pull ${REPO_NAME}"
               } 
           }
         }
