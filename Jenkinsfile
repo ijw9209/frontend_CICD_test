@@ -119,7 +119,7 @@ pipeline {
             steps {
                 echo "Deploy"
                 script {
-                    sh "docker run -dit --name ${IMAGE_NAME} -p 3200:3000 ${IMAGE_NAME}"
+                    sh "docker run -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${IMAGE_NAME}"
                 }
             }
         }
