@@ -92,7 +92,7 @@ pipeline {
         stage('Docker hub push') { 
           steps { 
               script {
-                sh "docker push ${REPO_NAME}:${env.BUILD_ID}"" //docker push
+                sh "docker push ${REPO_NAME}:${env.BUILD_ID}" //docker push
               } 
           }
         } 
@@ -100,7 +100,7 @@ pipeline {
         stage('Docker hub pull') { 
           steps { 
               script {
-                "docker pull ${REPO_NAME}:${env.BUILD_ID}""
+                "docker pull ${REPO_NAME}:${env.BUILD_ID}"
               } 
           }
         }
