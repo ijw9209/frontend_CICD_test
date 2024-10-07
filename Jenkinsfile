@@ -4,11 +4,14 @@ pipeline {
      environment {
         BRANCH_NAME = "${env.GIT_BRANCH.replace('origin/', '')}" // Strip 'origin/' from the branch name
 
-        SERVICE_NAME = "next-cicd-test"
+        SERVICE_NAME = "ijw9209/next-cicd-test"
         CONTAINTER_NAME = "${SERVICE_NAME}-${BRANCH_NAME}"
         IMAGE_NAME = "${SERVICE_NAME}-${BRANCH_NAME}:${env.BUILD_ID}"
         // IMAGE_TAG = 'latest'
         GIT_BRANCH = "${env.GIT_BRANCH}"
+
+        DOCKERHUB_CREDENTIALS = credentials('Dockerhub-access-token') // jenkins에 등록해 놓은 docker hub credentials 이름
+
 
     }
 
@@ -69,24 +72,35 @@ pipeline {
                 // sh "docker build ENV_MODE=${ENV_MODE} -t test-cicd -f Dockerfile ."
                 script {
                     // Docker 이미지를 빌드
+                    //def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                     def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                 }
             }
         }
 
-
-        stage('Stop current') {
+        stage("Dockerhub Push") {
             steps {
-                echo "Stop previous version"
+                echo 'Dockerhub push'
                 script {
-                //   sh "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f"
-                    def result = sh script: "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f", returnStatus: true
-                    if (result != 0) {
-                        echo "No container to stop or an error occurred, but continuing..."
+                    docker.withRegistry('', DOCKERHUB_CREDENTIALS){
+                        dockerImage.push("1.0")
                     }
                 }
             }
         }
+
+        // stage('Stop current') {
+        //     steps {
+        //         echo "Stop previous version"
+        //         script {
+        //         //   sh "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f"
+        //             def result = sh script: "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f", returnStatus: true
+        //             if (result != 0) {
+        //                 echo "No container to stop or an error occurred, but continuing..."
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Deploy') {
             steps {
