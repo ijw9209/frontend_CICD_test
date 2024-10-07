@@ -90,7 +90,7 @@ pipeline {
         stage('Deploy our image') { 
           steps { 
               script {
-                sh "docker push ${SERVICE_NAME}:$BUILD_NUMBER" //docker push
+                sh "docker push ${IMAGE_NAME}" //docker push
               } 
           }
         } 
