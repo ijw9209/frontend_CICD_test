@@ -104,16 +104,18 @@ pipeline {
         }
 
         stage('Stop current') {
-            echo "Stop previous version"
-            def result = sh script: "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f", returnStatus: true
-            if (result != 0) {
-                echo "No container to stop or an error occurred, but continuing..."
+            steps {
+                echo "Stop previous version"
+                def result = sh script: "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f", returnStatus: true
+                if (result != 0) {
+                    echo "No container to stop or an error occurred, but continuing..."
+                }
             }
         }
 
         stage('Deploy') {
-            echo "Deploy"
             steps {
+                echo "Deploy"
                 script {
                     sh "docker run -dit --name ${IMAGE_NAME} -p 3200:3000 ${IMAGE_NAME}"
                 }
