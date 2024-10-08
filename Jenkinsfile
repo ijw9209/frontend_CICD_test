@@ -129,7 +129,7 @@ pipeline {
                     ls -al
                     """
                     // 기존 컨테이너 및 이미지 삭제
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker ps -q --filter name=${CONTAINTER_NAME} | grep -q . && sudo docker rm -f \$(docker ps -aq --filter name=${CONTAINTER_NAME})'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker ps -q --filter name=${CONTAINTER_NAME} | grep -q . && sudo docker rm -f \$(sudo docker ps -aq --filter name=${CONTAINTER_NAME})'"
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker rmi -f ${CONTAINTER_NAME}'"
         
                     // Docker Hub에서 이미지 풀받기
