@@ -11,7 +11,6 @@ pipeline {
         CONTAINTER_NAME = "${SERVICE_NAME}-${BRANCH_NAME}"
         IMAGE_NAME = "${SERVICE_NAME}-${BRANCH_NAME}:${env.BUILD_ID}"
         // IMAGE_TAG = 'latest'
-        GIT_REPO_URL = 'https://github.com/ijw9209/frontend_CICD_test.git'
 
 
         // docker hub test
@@ -46,12 +45,12 @@ pipeline {
                     echo "Current Branch: ${BRANCH_NAME}"
 
                     if (env.BRANCH_NAME == 'dev') {
-                        git branch: 'dev', url: ${GIT_REPO_URL}
+                        git branch: 'dev', url: "https://github.com/ijw9209/frontend_CICD_test.git"
                     }else if(env.BRANCH_NAME == 'main') {
-                        git branch: 'main', url: ${GIT_REPO_URL}
+                        git branch: 'main', url: "https://github.com/ijw9209/frontend_CICD_test.git"
                     } else {
                         echo 'No specific branch checked out, using default branch...'
-                        git url: ${GIT_REPO_URL}
+                        git url: "https://github.com/ijw9209/frontend_CICD_test.git"
                     }
 
                 }
