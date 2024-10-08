@@ -119,10 +119,8 @@ pipeline {
 
         stage('ssh-test') {
             steps {
-                script {
-                    sshagent(credentials: 'aws-ec2-web-1') {
-                        sh 'ssh -o StrictHostKeyChecking=no "uptime"'
-                    }
+                sshagent(credentials: ['aws-ec2-web-1']) {
+                    sh 'ssh -o StrictHostKeyChecking=no "uptime"'
                 }
             }
         }
