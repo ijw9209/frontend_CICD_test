@@ -116,9 +116,14 @@ pipeline {
                 }
             }
         }
+
         stage('ssh-test') {
-            sshagent(credentials: 'aws-ec2-web-1') {
-                sh 'ssh -o StrictHostKeyChecking=no "uptime"'
+            steps {
+                script {
+                    sshagent(credentials: 'aws-ec2-web-1') {
+                        sh 'ssh -o StrictHostKeyChecking=no "uptime"'
+                    }
+                }
             }
         }
 
