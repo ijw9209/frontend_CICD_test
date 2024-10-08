@@ -84,7 +84,9 @@ pipeline {
                     // Docker 이미지를 빌드
                     //def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                     
-                    def image = docker.build("ijw9209/${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+                    // def image = docker.build("ijw9209/${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+                    // Docker 이미지를 빌드 (플랫폼 옵션 추가)
+                    def image = docker.build("ijw9209/${env.IMAGE_NAME}", "--platform linux/amd64 --build-arg ENV_MODE=${env.ENV_MODE} .")
                 }
             }
         }
@@ -134,9 +136,10 @@ pipeline {
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker pull ${REPO_NAME}:${env.BUILD_ID}'"
         
                     // Docker 컨테이너 실행
-                    // sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run -d --name ${CONTAINTER_NAME} -p 3000:3000 ${REPO_NAME}:${env.BUILD_ID}'"
+                    // sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${REPO_NAME}:${env.BUILD_ID}'"
+                    //플랫폼 추가
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run --platform linux/amd64 -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${REPO_NAME}:${env.BUILD_ID}'"
 
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${REPO_NAME}:${env.BUILD_ID}'"
                 }
             }
         }
