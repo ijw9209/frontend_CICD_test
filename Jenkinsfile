@@ -120,7 +120,13 @@ pipeline {
         stage('ssh-test') {
             steps {
                 sshagent(credentials: ['aws-ec2-web-1']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 "uptime"'
+                    // sh 'ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 "uptime"'
+                    sh """
+                    ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231'
+                    ls -al
+                    '
+                    """
+                    }
                 }
             }
         }
