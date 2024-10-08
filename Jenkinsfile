@@ -100,7 +100,7 @@ pipeline {
         stage('Docker hub pull') { 
           steps { 
               script {
-                "docker pull ${REPO_NAME}:latest"
+                "docker pull ${REPO_NAME}:${env.BUILD_ID}"
               } 
           }
         }
@@ -116,6 +116,12 @@ pipeline {
                 }
             }
         }
+        stage('ssh-test') {
+            sshagent(credentials: 'aws-ec2-web-1') {
+                sh 'ssh -o StrictHostKeyChecking=no "uptime"'
+            }
+        }
+
 
         stage('Deploy') {
             steps {
