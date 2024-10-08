@@ -134,7 +134,9 @@ pipeline {
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker pull ${REPO_NAME}:${env.BUILD_ID}'"
         
                     // Docker 컨테이너 실행
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run -d --name ${CONTAINTER_NAME} -p 3000:3000 ${REPO_NAME}:${env.BUILD_ID}'"
+                    // sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run -d --name ${CONTAINTER_NAME} -p 3000:3000 ${REPO_NAME}:${env.BUILD_ID}'"
+
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${REPO_NAME}:${env.BUILD_ID}'"
                 }
             }
         }
