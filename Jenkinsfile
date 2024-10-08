@@ -125,8 +125,16 @@ pipeline {
                     ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 << 'EOF'
                     uptime
                     ls -al
-                    EOF
                     """
+                    // 기존 컨테이너 및 이미지 삭제
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'docker ps -q --filter name=${REPO_NAME} | grep -q . && docker rm -f \$(docker ps -aq --filter name=${REPO_NAME})'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'docker rmi -f ${REPO_NAME}'"
+        
+                    // Docker Hub에서 이미지 풀받기
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'docker pull ${REPO_NAME}'"
+        
+                    // Docker 컨테이너 실행
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'docker run -d --name ${REPO_NAME} -p 3000:3000 ${REPO_NAME}'"
                 }
             }
         }
