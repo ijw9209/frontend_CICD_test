@@ -122,9 +122,10 @@ pipeline {
                 sshagent(credentials: ['aws-ec2-web-1']) {
                     // sh 'ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 "uptime"'
                     sh """
-                    ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231'
+                    ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 << 'EOF'
+                    uptime
                     ls -al
-                    '
+                    EOF
                     """
                 }
             }
