@@ -75,35 +75,35 @@ pipeline {
           }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                echo 'Docker Build'
-                  // Docker 이미지를 빌드
-                // sh "docker build ENV_MODE=${ENV_MODE} -t test-cicd -f Dockerfile ."
-                script {
-                    // Docker 이미지를 빌드
-                    //def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+        // stage('Build Docker Image') {
+        //     steps {
+        //         echo 'Docker Build'
+        //           // Docker 이미지를 빌드
+        //         // sh "docker build ENV_MODE=${ENV_MODE} -t test-cicd -f Dockerfile ."
+        //         script {
+        //             // Docker 이미지를 빌드
+        //             //def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                     
-                    def image = docker.build("ijw9209/${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
-                }
-            }
-        }
-        // docker hub test
-        stage('Docker hub push') { 
-          steps { 
-              script {
-                sh "docker push ${REPO_NAME}:${env.BUILD_ID}" //docker push
-              } 
-          }
-        } 
+        //             def image = docker.build("ijw9209/${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+        //         }
+        //     }
+        // }
+        // // docker hub test
+        // stage('Docker hub push') { 
+        //   steps { 
+        //       script {
+        //         sh "docker push ${REPO_NAME}:${env.BUILD_ID}" //docker push
+        //       } 
+        //   }
+        // } 
 
-        stage('Docker hub pull') { 
-          steps { 
-              script {
-                "docker pull ${REPO_NAME}:${env.BUILD_ID}"
-              } 
-          }
-        }
+        // stage('Docker hub pull') { 
+        //   steps { 
+        //       script {
+        //         "docker pull ${REPO_NAME}:${env.BUILD_ID}"
+        //       } 
+        //   }
+        // }
 
         stage('Stop current') {
             steps {
@@ -120,7 +120,7 @@ pipeline {
         stage('ssh-test') {
             steps {
                 sshagent(credentials: ['aws-ec2-web-1']) {
-                    sh 'ssh -o StrictHostKeyChecking=no "uptime"'
+                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 "uptime"'
                 }
             }
         }
