@@ -11,7 +11,8 @@ pipeline {
         CONTAINTER_NAME = "${SERVICE_NAME}-${BRANCH_NAME}"
         IMAGE_NAME = "${SERVICE_NAME}-${BRANCH_NAME}:${env.BUILD_ID}"
         // IMAGE_TAG = 'latest'
-        GIT_BRANCH = "${env.GIT_BRANCH}"
+        GIT_REPO_URL = 'https://github.com/ijw9209/frontend_CICD_test.git'
+
 
         // docker hub test
         DOCKERHUB_CREDENTIALS = credentials('Dockerhub-access-token') // jenkins에 등록해 놓은 docker hub credentials 이름
@@ -42,29 +43,17 @@ pipeline {
 
                 script {
                     echo 'Cloning the repository...'
-                    echo 'testing..'
-                    echo "GIT_COMMIT:  ${env.GIT_COMMIT}"
-                    echo "GIT_BRANCH: ${env.GIT_BRANCH}"
-
                     echo "Current Branch: ${BRANCH_NAME}"
 
                     if (env.BRANCH_NAME == 'dev') {
-                        git branch: 'dev', url: 'https://github.com/ijw9209/frontend_CICD_test.git'
+                        git branch: 'dev', url: ${GIT_REPO_URL}
                     }else if(env.BRANCH_NAME == 'main') {
-                        git branch: 'main', url: 'https://github.com/ijw9209/frontend_CICD_test.git'
+                        git branch: 'main', url: ${GIT_REPO_URL}
                     } else {
                         echo 'No specific branch checked out, using default branch...'
-                        git url: 'https://github.com/ijw9209/frontend_CICD_test.git'
+                        git url: ${GIT_REPO_URL}
                     }
 
-                }
-            }
-        }
-
-        stage('Check Docker') {
-            steps {
-                script {
-                    sh 'docker ps'
                 }
             }
         }
@@ -123,15 +112,15 @@ pipeline {
             steps {
                 sshagent(credentials: ['aws-ec2-web-1']) {
                     // sh 'ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 "uptime"'
-                    sh """
-                    ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 << 'EOF'
-                    uptime
-                    ls -al
-                    """
+                    // sh """
+                    // ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 << 'EOF'
+                    // uptime
+                    // ls -al
+                    // """
+                    
                     // 기존 컨테이너 및 이미지 삭제
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker ps -q --filter name=${CONTAINTER_NAME} | grep -q . && sudo docker rm -f \$(sudo docker ps -aq --filter name=${CONTAINTER_NAME})'"
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker rmi -f ${CONTAINTER_NAME}'"
-        
                     // Docker Hub에서 이미지 풀받기
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker pull ${REPO_NAME}:${env.BUILD_ID}'"
         
@@ -139,6 +128,7 @@ pipeline {
                     // sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${REPO_NAME}:${env.BUILD_ID}'"
                     //플랫폼 추가
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run --platform linux/amd64 -dit --name ${CONTAINTER_NAME} -p 3000:3000 ${REPO_NAME}:${env.BUILD_ID}'"
+                    
 
                 }
             }
