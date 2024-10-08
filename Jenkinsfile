@@ -75,27 +75,27 @@ pipeline {
           }
         }
 
-        // stage('Build Docker Image') {
-        //     steps {
-        //         echo 'Docker Build'
-        //           // Docker 이미지를 빌드
-        //         // sh "docker build ENV_MODE=${ENV_MODE} -t test-cicd -f Dockerfile ."
-        //         script {
-        //             // Docker 이미지를 빌드
-        //             //def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+        stage('Build Docker Image') {
+            steps {
+                echo 'Docker Build'
+                  // Docker 이미지를 빌드
+                // sh "docker build ENV_MODE=${ENV_MODE} -t test-cicd -f Dockerfile ."
+                script {
+                    // Docker 이미지를 빌드
+                    //def image = docker.build("${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
                     
-        //             def image = docker.build("ijw9209/${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
-        //         }
-        //     }
-        // }
-        // // docker hub test
-        // stage('Docker hub push') { 
-        //   steps { 
-        //       script {
-        //         sh "docker push ${REPO_NAME}:${env.BUILD_ID}" //docker push
-        //       } 
-        //   }
-        // } 
+                    def image = docker.build("ijw9209/${env.IMAGE_NAME}", "--build-arg ENV_MODE=${env.ENV_MODE} .")
+                }
+            }
+        }
+        // docker hub test
+        stage('Docker hub push') { 
+          steps { 
+              script {
+                sh "docker push ${REPO_NAME}:${env.BUILD_ID}" //docker push
+              } 
+          }
+        } 
 
         // stage('Docker hub pull') { 
         //   steps { 
@@ -127,27 +127,27 @@ pipeline {
                     ls -al
                     """
                     // 기존 컨테이너 및 이미지 삭제
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'docker ps -q --filter name=${REPO_NAME} | grep -q . && docker rm -f \$(docker ps -aq --filter name=${REPO_NAME})'"
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'docker rmi -f ${REPO_NAME}'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker ps -q --filter name=${REPO_NAME} | grep -q . && sudo docker rm -f \$(docker ps -aq --filter name=${REPO_NAME})'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker rmi -f ${REPO_NAME}'"
         
                     // Docker Hub에서 이미지 풀받기
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'docker pull ${REPO_NAME}'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker pull ${REPO_NAME}'"
         
                     // Docker 컨테이너 실행
-                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'docker run -d --name ${REPO_NAME} -p 3000:3000 ${REPO_NAME}'"
+                    sh "ssh -o StrictHostKeyChecking=no ubuntu@43.202.55.231 'sudo docker run -d --name ${REPO_NAME} -p 3000:3000 ${REPO_NAME}'"
                 }
             }
         }
 
 
-        stage('Deploy') {
-            steps {
-                echo "Deploy"
-                script {
-                    sh "docker run -dit --name ${REPO_NAME} -p 3000:3000 ${IMAGE_NAME}"
-                }
-            }
-        }
+        // stage('Deploy') {
+        //     steps {
+        //         echo "Deploy"
+        //         script {
+        //             sh "docker run -dit --name ${REPO_NAME} -p 3000:3000 ${IMAGE_NAME}"
+        //         }
+        //     }
+        // }
 
         // stage('Stop current') {
         //     steps {
