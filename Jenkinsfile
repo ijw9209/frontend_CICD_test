@@ -71,7 +71,7 @@ pipeline {
 
         stage('Login'){
           steps{
-                sh "echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin" // docker hub 로그인
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin' // docker hub 로그인
           }
         }
 
@@ -100,7 +100,7 @@ pipeline {
         stage('Docker hub pull') { 
           steps { 
               script {
-                "docker pull ${REPO_NAME}:${env.BUILD_ID}"
+                "docker pull ${REPO_NAME}:latest"
               } 
           }
         }
@@ -109,7 +109,7 @@ pipeline {
             steps {
                 echo "Stop previous version"
                 script {
-                    def result = sh script: "docker ps -a -q --filter name=${CONTAINTER_NAME} | xargs -r docker rm -f", returnStatus: true
+                    def result = sh script: "docker ps -a -q --filter name=${REPO_NAME} | xargs -r docker rm -f", returnStatus: true
                     if (result != 0) {
                         echo "No container to stop or an error occurred, but continuing..."
                     }
